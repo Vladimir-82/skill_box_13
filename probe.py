@@ -30,9 +30,9 @@ def get_text_messages(message):
         var_exit = ''
         for elem in var:
             if elem == '<':
-                var_exit += var[var.index('<'):]
+                var_exit += var[var.index('<'):var.index('>') + 1]
 
-        bot.send_message(message.from_user.id,)
+        bot.send_message(message.from_user.id, set(var) - set(var_exit))
     else:
         bot.send_message(message.from_user.id, 'Не понимаю, тебя, дружище!')
 bot.polling(none_stop = True)
