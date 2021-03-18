@@ -27,12 +27,17 @@ def get_text_messages(message):
         bot.send_message(message.from_user.id, responce.text[responce.text.index('<title>') + len('<title>'):responce.text.index('</title>')])
 
         var = responce.text[responce.text.index('<p>') + len('<p>'):responce.text.index('</p>')]
-        var_exit = ''
-        for elem in var:
-            if elem == '<':
-                var_exit += var[var.index('<'):var.index('>') + 1]
+        var_exit = list(var)
+        while "<" in var_exit:
+            del var_exit[var_exit.index('<'):var_exit.index('>') + 1]
 
-        bot.send_message(message.from_user.id, set(var) - set(var_exit))
+        while "&#160;" in var_exit:
+            del var_exit[var_exit.index("&#160;"):var_exit.index("&#160;") + len("&#160;")]
+
+        while "&#91;1&#93;" in var_exit:
+            del var_exit[var_exit.index("&#91;1&#93;"):var_exit.index("&#91;1&#93;") + len("&#91;1&#93;")]
+
+        bot.send_message(message.from_user.id, ''.join(var_exit))
     else:
         bot.send_message(message.from_user.id, 'Не понимаю, тебя, дружище!')
 bot.polling(none_stop = True)
