@@ -1,3 +1,6 @@
+ENG = 'abcdefghijklmnopqrstuvwxyz'
+RUS = 'абвгдеёжзиклмнопрстуфхцчшщъыьэюя'
+
 import requests
 import telebot
 from token_telegram import _token
@@ -11,10 +14,13 @@ def send_welcome(message):
 
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
-    numbers = [str(_) for _ in range(1000)]
+    numbers = [str(_) for _ in range(100)]
     inq = message.text
-    responce = requests.get('http://ru.wikipedia.org/wiki' + '/' + str(inq))
-
+    for _ in list(inq):
+        if _.lower() in RUS:
+            responce = requests.get('http://ru.wikipedia.org/wiki' + '/' + str(inq))
+        else:
+            responce = requests.get('http://en.wikipedia.org/wiki' + '/' + str(inq))
     if inq in responce.text:
         bot.send_message(message.from_user.id,
                          responce.text[responce.text.index('<title>') + len('<title>'):responce.text.index('</title>')])
